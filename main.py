@@ -4,31 +4,31 @@ import pandas as pd
 conn = sqlite3.connect('data.sqlite')
 
 try:
-    table_name = "Employees"
+    table_name = "employees"
     pd.read_sql(f"SELECT 1 FROM {table_name} LIMIT 1", conn)
 except:
     table_name = "employees"
 df_first_five = pd.read_sql(f"""
-    SELECT EmployeeID, LastName 
+    SELECT employeeID, LastName 
     FROM {table_name} 
     LIMIT 5
 """, conn)
 
 df_five_reverse = pd.read_sql(f"""
-    SELECT LastName, EmployeeID 
+    SELECT LastName, employeeID 
     FROM {table_name} 
     LIMIT 5
 """, conn)
 
 df_alias = pd.read_sql(f"""
-    SELECT EmployeeID AS 'ID', LastName 
+    SELECT employeeID AS 'ID', LastName 
     FROM {table_name} 
     LIMIT 5
 """, conn)
 
 df_executive = pd.read_sql(f"""
     SELECT 
-        EmployeeID,
+        employeeID,
         FirstName,
         LastName,
         Title,
