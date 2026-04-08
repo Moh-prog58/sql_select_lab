@@ -3,24 +3,24 @@ import pandas as pd
 
 conn = sqlite3.connect('data.sqlite')
 
-employee_data = pd.read_sql("""SELECT * FROM employees""", conn)
+employee_data = pd.read_sql("""SELECT * FROM Employees""", conn)
 print("----------------Employee Data----------------")
 print(employee_data)
 print("----------------End Employee Data----------------")
 
 df_first_five = pd.read_sql("""
     SELECT EmployeeID, LastName 
-    FROM employees
+    FROM Employees
 """, conn)
 
 df_five_reverse = pd.read_sql("""
     SELECT LastName, EmployeeID 
-    FROM employees
+    FROM Employees
 """, conn)
 
 df_alias = pd.read_sql("""
     SELECT LastName, EmployeeID AS ID 
-    FROM employees
+    FROM Employees
 """, conn)
 
 df_executive = pd.read_sql("""
@@ -30,20 +30,20 @@ df_executive = pd.read_sql("""
             THEN 'Executive' 
             ELSE 'Not Executive' 
         END AS role
-    FROM employees
+    FROM Employees
 """, conn)
 
 df_name_length = pd.read_sql("""
     SELECT LastName, LENGTH(LastName) AS name_length 
-    FROM employees
+    FROM Employees
 """, conn)
 
 df_short_title = pd.read_sql("""
     SELECT JobTitle, SUBSTR(JobTitle, 1, 2) AS short_title 
-    FROM employees
+    FROM Employees
 """, conn)
 
-order_details = pd.read_sql("""SELECT * FROM orderDetails""", conn)
+order_details = pd.read_sql("""SELECT * FROM OrderDetails""", conn)
 print("----------------Order Details Data----------------")
 print(order_details)
 print("----------------End Order Details Data----------------")
@@ -52,7 +52,7 @@ sum_total_price = pd.read_sql("""
     SELECT 
         OrderID,
         SUM(ROUND(priceEach * quantityOrdered)) AS total_price
-    FROM orderDetails
+    FROM OrderDetails
     GROUP BY OrderID
 """, conn)
 
@@ -62,7 +62,7 @@ df_day_month_year = pd.read_sql("""
         SUBSTR(OrderDate, 9, 2) AS day,
         SUBSTR(OrderDate, 6, 2) AS month,
         SUBSTR(OrderDate, 1, 4) AS year
-    FROM orders
+    FROM Orders
 """, conn)
 
 conn.close()
