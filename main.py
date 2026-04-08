@@ -56,7 +56,7 @@ print("----------------Order Details Data----------------")
 print(order_details.head())
 print("----------------End Order Details Data----------------")
 
-# STEP 8 - Using correct column names UnitPrice and Quantity
+# STEP 8 - Using correct columns UnitPrice and Quantity
 sum_total_price = pd.read_sql("""
     SELECT 
         OrderID,
