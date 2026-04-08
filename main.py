@@ -3,69 +3,66 @@ import pandas as pd
 
 conn = sqlite3.connect('data.sqlite')
 
-try:
-    table_name = "employees"
-    pd.read_sql(f"SELECT 1 FROM {table_name} LIMIT 1", conn)
-except:
-    table_name = "employees"
-df_first_five = pd.read_sql(f"""
-    SELECT employeeID, LastName 
-    FROM {table_name} 
-    LIMIT 5
+employee_data = pd.read_sql("""SELECT * FROM employees""", conn)
+print("----------------Employee Data----------------")
+print(employee_data)
+print("----------------End Employee Data----------------")
+
+df_first_five = pd.read_sql("""
+    SELECT EmployeeID, LastName 
+    FROM employees
 """, conn)
 
-df_five_reverse = pd.read_sql(f"""
-    SELECT LastName, employeeID 
-    FROM {table_name} 
-    LIMIT 5
+df_five_reverse = pd.read_sql("""
+    SELECT LastName, EmployeeID 
+    FROM employees
 """, conn)
 
-df_alias = pd.read_sql(f"""
-    SELECT employeeID AS 'ID', LastName 
-    FROM {table_name} 
-    LIMIT 5
+df_alias = pd.read_sql("""
+    SELECT LastName, EmployeeID AS ID 
+    FROM employees
 """, conn)
 
-df_executive = pd.read_sql(f"""
-    SELECT 
-        employeeID,
-        FirstName,
-        LastName,
-        Title,
+df_executive = pd.read_sql("""
+    SELECT *,
         CASE 
-            WHEN Title IN ('President', 'Vice President, Sales', 'Vice President, Marketing') 
-                THEN 'Executive'
-            ELSE 'Not Executive'
+            WHEN JobTitle IN ('President', 'VP Sales', 'VP Marketing') 
+            THEN 'Executive' 
+            ELSE 'Not Executive' 
         END AS role
-    FROM {table_name}
+    FROM employees
 """, conn)
 
-df_name_length = pd.read_sql(f"""
+df_name_length = pd.read_sql("""
     SELECT LastName, LENGTH(LastName) AS name_length 
-    FROM {table_name}
+    FROM employees
 """, conn)
 
-df_short_title = pd.read_sql(f"""
-    SELECT SUBSTR(Title, 1, 2) AS short_title 
-    FROM {table_name}
+df_short_title = pd.read_sql("""
+    SELECT JobTitle, SUBSTR(JobTitle, 1, 2) AS short_title 
+    FROM employees
 """, conn)
 
-sum_total_price_df = pd.read_sql("""
-    SELECT ROUND(SUM(UnitPrice * Quantity)) AS total_amount 
-    FROM "Order Details"
+order_details = pd.read_sql("""SELECT * FROM orderDetails""", conn)
+print("----------------Order Details Data----------------")
+print(order_details)
+print("----------------End Order Details Data----------------")
+
+sum_total_price = pd.read_sql("""
+    SELECT 
+        OrderID,
+        SUM(ROUND(priceEach * quantityOrdered)) AS total_price
+    FROM orderDetails
+    GROUP BY OrderID
 """, conn)
-sum_total_price = sum_total_price_df.iloc[0]['total_amount']
 
 df_day_month_year = pd.read_sql("""
     SELECT 
         OrderDate,
-        strftime('%d', OrderDate) AS day,
-        strftime('%m', OrderDate) AS month,
-        strftime('%Y', OrderDate) AS year
-    FROM Orders
-    LIMIT 10
+        SUBSTR(OrderDate, 9, 2) AS day,
+        SUBSTR(OrderDate, 6, 2) AS month,
+        SUBSTR(OrderDate, 1, 4) AS year
+    FROM orders
 """, conn)
 
 conn.close()
-
-print("All variables defined successfully for testing.")
