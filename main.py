@@ -1,6 +1,5 @@
 import sqlite3
 import pandas as pd
-
 conn = sqlite3.connect('data.sqlite')
 
 employee_data = pd.read_sql("""SELECT * FROM Employees""", conn)
@@ -26,7 +25,7 @@ df_alias = pd.read_sql("""
 df_executive = pd.read_sql("""
     SELECT *,
         CASE 
-            WHEN JobTitle IN ('President', 'VP Sales', 'VP Marketing') 
+            WHEN Title IN ('President', 'VP Sales', 'VP Marketing') 
             THEN 'Executive' 
             ELSE 'Not Executive' 
         END AS role
@@ -37,22 +36,21 @@ df_name_length = pd.read_sql("""
     SELECT LastName, LENGTH(LastName) AS name_length 
     FROM Employees
 """, conn)
-
 df_short_title = pd.read_sql("""
-    SELECT JobTitle, SUBSTR(JobTitle, 1, 2) AS short_title 
+    SELECT Title, SUBSTR(Title, 1, 2) AS short_title 
     FROM Employees
 """, conn)
 
-order_details = pd.read_sql("""SELECT * FROM OrderDetails""", conn)
+order_details = pd.read_sql("""SELECT * FROM "Order Details" """, conn)
 print("----------------Order Details Data----------------")
-print(order_details)
+print(order_details.head())
 print("----------------End Order Details Data----------------")
 
 sum_total_price = pd.read_sql("""
     SELECT 
         OrderID,
         SUM(ROUND(priceEach * quantityOrdered)) AS total_price
-    FROM OrderDetails
+    FROM "Order Details"
     GROUP BY OrderID
 """, conn)
 
